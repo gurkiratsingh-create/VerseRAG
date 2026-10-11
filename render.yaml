@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: VerseRAG
+    name: verserag-api
     runtime: python
     region: singapore
     plan: free
@@ -34,5 +34,5 @@ services:
       - key: VITE_API_URL
         fromService:
           type: web
-          name: VerseRAG
+          name: verserag-api
           envVarKey: RENDER_EXTERNAL_URL
