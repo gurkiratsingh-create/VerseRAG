@@ -1,0 +1,15 @@
+{
+  "dataset": "C:\\Users\\GURKIRAT SINGH\\OneDrive\\Desktop\\3rd\\pro\\VerseRAG_Evaluation_Questions.csv",
+  "document_key": "hand1",
+  "total_questions": 18,
+  "successful_requests": 18,
+  "failed_requests": 0,
+  "temporal_version_accuracy_pct": 100.0,
+  "temporal_version_questions": 14,
+  "answer_keyword_match_pct": 72.22,
+  "citation_id_validity_pct": 100.0,
+  "answers_with_citations_pct": 100.0,
+  "mean_latency_ms": 21660.73,
+  "median_latency_ms": 22324.19,
+  "note": "Answer matching is lexical, not semantic. Citation ID validity does not establish factual support. Version accuracy checks whether the expected version appears among returned citations."
+}

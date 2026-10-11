@@ -1,0 +1,22 @@
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: verserag-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: verserag
+      POSTGRES_USER: verse_user
+      POSTGRES_PASSWORD: local_dev_password
+    ports:
+      - "55432:5432"
+    volumes:
+      - verserag_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U verse_user -d verserag"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  verserag_data:

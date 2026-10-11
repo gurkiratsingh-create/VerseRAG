@@ -1,0 +1,113 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Dela+Gothic+One&family=Rajdhani:wght@500;600;700&display=swap");
+
+:root {
+  font-family: "Rajdhani", sans-serif;
+  color: #f6f3ff;
+  background: #09090d;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --ink: #09090d;
+  --panel: #14131f;
+  --paper: #f4ecd8;
+  --paper-ink: #1a1520;
+  --muted: #a7a3bd;
+
+  --manga-gold: #ffc21a;
+  --manga-purple: #b45cff;
+  --manga-cyan: #3ee6ff;
+  --manga-red: #ff4d5a;
+  --manga-green: #46e39a;
+
+  --f-display: "Anton", Impact, "Arial Narrow", sans-serif;
+  --f-sfx: "Bangers", Impact, sans-serif;
+  --f-jp: "Dela Gothic One", serif;
+  --f-body: "Rajdhani", "Segoe UI", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: var(--ink);
+  scroll-behavior: smooth;
+  scrollbar-color: #6d4b91 var(--ink);
+  scrollbar-width: thin;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--ink);
+  color: #f6f3ff;
+  font-family: var(--f-body);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: var(--f-body);
+}
+
+button,
+input,
+textarea,
+select {
+  font-size: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--manga-gold);
+  outline-offset: 3px;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+::selection {
+  color: #09090d;
+  background: var(--manga-gold);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
