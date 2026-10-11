@@ -34,5 +34,5 @@ services:
       - key: VITE_API_URL
         fromService:
           type: web
-          name: verserag-api
+          name: VerseRAG
           envVarKey: RENDER_EXTERNAL_URL
