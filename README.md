@@ -438,6 +438,10 @@ intentionally want to publish them.
 
 ## Deployment notes
 
+For a $0 Render + Neon deployment, follow
+[DEPLOY_FREE.md](DEPLOY_FREE.md). Keep provider secrets in the hosting
+dashboard; do not commit `.env` files.
+
 The local development setup is not automatically production-ready.
 
 -   **Frontend:** A Vite frontend can be deployed as a static site on a

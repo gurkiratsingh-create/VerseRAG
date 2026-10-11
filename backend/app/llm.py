@@ -6,6 +6,8 @@ from urllib.request import Request, urlopen
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2")
+HF_TOKEN = os.getenv("HF_TOKEN")
+HF_MODEL = os.getenv("HF_MODEL", "Qwen/Qwen2.5-7B-Instruct-1M:fastest")
 
 
 def generate_grounded_answer(question: str, passages: list[dict]) -> str:
@@ -38,36 +40,53 @@ EVIDENCE:
 
 ANSWER:"""
 
-    payload = json.dumps({
-        "model": OLLAMA_MODEL,
-        "prompt": prompt,
-        "stream": False,
-        "keep_alive": "10m",
-        "options": {
-            "temperature": 0,
-            "num_predict": 120,
-        },
-    }).encode("utf-8")
-
-    request = Request(
-        f"{OLLAMA_URL.rstrip('/')}/api/generate",
-        data=payload,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-
     try:
-        with urlopen(request, timeout=120) as response:
-            result = json.loads(response.read().decode("utf-8"))
-    except Exception as exc:
-        raise RuntimeError(
-            f"Local Ollama generation failed: {exc}"
-        ) from exc
+        if os.getenv("LLM_PROVIDER", "ollama").lower() == "huggingface":
+            if not HF_TOKEN:
+                raise RuntimeError("HF_TOKEN is required for Hugging Face inference.")
 
-    answer = result.get("response", "").strip()
+            payload = json.dumps({
+                "model": HF_MODEL,
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": 0,
+                "max_tokens": 180,
+                "stream": False,
+            }).encode("utf-8")
+            request = Request(
+                "https://router.huggingface.co/v1/chat/completions",
+                data=payload,
+                headers={
+                    "Authorization": f"Bearer {HF_TOKEN}",
+                    "Content-Type": "application/json",
+                },
+                method="POST",
+            )
+            with urlopen(request, timeout=120) as response:
+                result = json.loads(response.read().decode("utf-8"))
+            answer = result["choices"][0]["message"]["content"].strip()
+        else:
+            payload = json.dumps({
+                "model": OLLAMA_MODEL,
+                "prompt": prompt,
+                "stream": False,
+                "keep_alive": "10m",
+                "options": {"temperature": 0, "num_predict": 120},
+            }).encode("utf-8")
+            request = Request(
+                f"{OLLAMA_URL.rstrip('/')}/api/generate",
+                data=payload,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urlopen(request, timeout=120) as response:
+                result = json.loads(response.read().decode("utf-8"))
+            answer = result.get("response", "").strip()
+    except Exception as exc:
+        provider = os.getenv("LLM_PROVIDER", "ollama").lower()
+        raise RuntimeError(f"{provider} generation failed: {exc}") from exc
 
     if not answer:
-        raise RuntimeError("Ollama returned an empty answer.")
+        raise RuntimeError("The configured model provider returned an empty answer.")
 
     return answer
 
