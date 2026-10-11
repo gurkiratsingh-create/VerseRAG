@@ -13,16 +13,12 @@ services:
         value: 3.11.11
       - key: DATABASE_URL
         sync: false
-      - key: HF_TOKEN
-        sync: false
       - key: LLM_PROVIDER
-        value: huggingface
-      - key: HF_MODEL
-        value: Qwen/Qwen2.5-7B-Instruct-1M:fastest
+        value: extractive
       - key: EMBEDDING_PROVIDER
-        value: huggingface
+        value: fastembed
       - key: CORS_ORIGINS
-        value: "*"
+        value: https://verserag-frontend.onrender.com
 
   - type: web
     name: verserag-frontend

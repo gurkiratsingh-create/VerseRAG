@@ -14,6 +14,39 @@ def generate_grounded_answer(question: str, passages: list[dict]) -> str:
     if not passages:
         return "The available evidence is insufficient to answer this question."
 
+    provider = os.getenv("LLM_PROVIDER", "ollama").lower()
+    if provider == "extractive":
+        stop_words = {
+            "about", "after", "are", "available", "does", "for", "from",
+            "how", "many", "what", "when", "where", "which", "who", "why",
+            "with", "the", "and", "that", "this", "was", "were", "will",
+        }
+        question_terms = {
+            word.lower()
+            for word in re.findall(r"[A-Za-z0-9]+", question)
+            if len(word) > 2 and word.lower() not in stop_words
+        }
+        candidates = []
+        for passage_index, passage in enumerate(passages):
+            for sentence_index, sentence in enumerate(
+                re.split(r"(?<=[.!?])\s+", passage["content"].strip())
+            ):
+                sentence = sentence.strip()
+                if sentence:
+                    sentence_terms = {
+                        word.lower()
+                        for word in re.findall(r"[A-Za-z0-9]+", sentence)
+                    }
+                    score = len(question_terms & sentence_terms)
+                    candidates.append(
+                        (score, -passage_index, -sentence_index, sentence, passage["source_id"])
+                    )
+
+        if candidates:
+            _, _, _, sentence, source_id = max(candidates)
+            return f"{sentence} [{source_id}]"
+        return f"{passages[0]['content'].strip()} [{passages[0]['source_id']}]"
+
     evidence = "\n\n".join(
         f"[{p['source_id']}] {p['content']}"
         for p in passages
@@ -41,7 +74,7 @@ EVIDENCE:
 ANSWER:"""
 
     try:
-        if os.getenv("LLM_PROVIDER", "ollama").lower() == "huggingface":
+        if provider == "huggingface":
             if not HF_TOKEN:
                 raise RuntimeError("HF_TOKEN is required for Hugging Face inference.")
 

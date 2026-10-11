@@ -36,13 +36,6 @@ cors_origins = [
     if origin.strip()
 ]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=cors_origins,
-    allow_credentials="*" not in cors_origins,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 app.include_router(documents_router)
 
 
@@ -74,3 +67,13 @@ def database_health():
 frontend_dist = Path(__file__).resolve().parents[1] / "frontend-dist"
 if frontend_dist.is_dir():
     app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
+
+# Wrap the complete app so browser requests also receive CORS headers on
+# unhandled errors, instead of surfacing them as an opaque "Failed to fetch".
+app = CORSMiddleware(
+    app,
+    allow_origins=cors_origins,
+    allow_credentials="*" not in cors_origins,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

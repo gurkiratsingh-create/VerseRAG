@@ -1,6 +1,7 @@
 from app.llm import generate_grounded_answer,validate_source_ids
 from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
+import os
 import re
 from difflib import SequenceMatcher
 from fastapi import (
@@ -1192,7 +1193,11 @@ def answer_question(
         "question": request.question,
         "as_of": as_of.isoformat(),
         "answer": answer,
-        "answer_type": "llm_grounded",
+        "answer_type": (
+            "extractive"
+            if os.getenv("LLM_PROVIDER", "ollama").lower() == "extractive"
+            else "llm_grounded"
+        ),
         "citations": citations,
         "citation_validation": citation_validation,
     }
