@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: verserag-api
+    name: VerseRAG
     runtime: python
     region: singapore
     plan: free
