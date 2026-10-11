@@ -13,6 +13,19 @@ The project combines a React + Vite frontend with a FastAPI backend,
 PostgreSQL with `pgvector`, sentence-transformer embeddings, and an
 Ollama-hosted language model.
 
+## Live deployment
+
+- **Frontend:** [https://verserag-frontend.onrender.com](https://verserag-frontend.onrender.com)
+- **Backend API:** [https://verserag-api.onrender.com](https://verserag-api.onrender.com)
+- **API health check:** [https://verserag-api.onrender.com/health](https://verserag-api.onrender.com/health)
+- **Interactive API docs:** [https://verserag-api.onrender.com/docs](https://verserag-api.onrender.com/docs)
+
+The hosted free-tier configuration uses local FastEmbed ONNX embeddings
+and extractive, source-cited answers, so it does not require paid
+inference credits. The Render free backend may sleep while idle and take
+longer to respond to the first request after inactivity. For deployment
+setup and configuration details, see [DEPLOY_FREE.md](DEPLOY_FREE.md).
+
 > **Project status:** Prototype / portfolio project. The evaluation
 > results below are from a small, synthetic employee-handbook dataset.
 > They are not a general benchmark or a guarantee of factual
@@ -438,9 +451,10 @@ intentionally want to publish them.
 
 ## Deployment notes
 
-For a $0 Render + Neon deployment, follow
-[DEPLOY_FREE.md](DEPLOY_FREE.md). Keep provider secrets in the hosting
-dashboard; do not commit `.env` files.
+For the deployed $0 Render + Neon setup, use the live URLs in
+[Live deployment](#live-deployment). To recreate or configure the
+deployment, follow [DEPLOY_FREE.md](DEPLOY_FREE.md). Keep provider
+secrets in the hosting dashboard; do not commit `.env` files.
 
 The local development setup is not automatically production-ready.
 
@@ -450,10 +464,10 @@ The local development setup is not automatically production-ready.
     dependencies and request patterns.
 -   **Database:** Use a hosted PostgreSQL instance with `pgvector`
     enabled.
--   **LLM:** The default Ollama URL points to a local service. A
-    deployed backend cannot reach your personal computer's `localhost`.
-    Use an appropriately hosted inference endpoint or deploy the model
-    on infrastructure you control.
+-   **LLM:** The hosted free-tier deployment uses extractive answers
+    because paid hosted inference is not part of the $0 setup. Local
+    development can use Ollama as described in the configuration
+    section.
 -   **File uploads:** Check host request-size limits, execution
     timeouts, temporary storage behavior, and PDF processing
     constraints.
@@ -463,9 +477,10 @@ The local development setup is not automatically production-ready.
 -   **Database security:** Use strong credentials, TLS where supported,
     and least-privilege access.
 
-A free-tier deployment may be possible, but database, inference,
-execution, storage, and bandwidth quotas vary by provider. Confirm
-current limits before choosing a hosting design.
+The live deployment currently uses free tiers, whose availability,
+quotas, and behavior can change. In particular, the Render backend can
+spin down while idle; see [DEPLOY_FREE.md](DEPLOY_FREE.md) for the
+current deployment notes.
 
 ## Limitations
 
